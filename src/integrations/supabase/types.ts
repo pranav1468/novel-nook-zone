@@ -14,7 +14,118 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chapters: {
+        Row: {
+          chapter_number: number
+          content: string | null
+          created_at: string
+          id: string
+          novel_id: string
+          title: string
+        }
+        Insert: {
+          chapter_number: number
+          content?: string | null
+          created_at?: string
+          id?: string
+          novel_id: string
+          title: string
+        }
+        Update: {
+          chapter_number?: number
+          content?: string | null
+          created_at?: string
+          id?: string
+          novel_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      novels: {
+        Row: {
+          author: string
+          chapter_count: number
+          cover_url: string | null
+          created_at: string
+          featured: boolean
+          genre: string[]
+          id: string
+          rating: number
+          status: Database["public"]["Enums"]["novel_status"]
+          synopsis: string | null
+          title: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          author: string
+          chapter_count?: number
+          cover_url?: string | null
+          created_at?: string
+          featured?: boolean
+          genre?: string[]
+          id?: string
+          rating?: number
+          status?: Database["public"]["Enums"]["novel_status"]
+          synopsis?: string | null
+          title: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          author?: string
+          chapter_count?: number
+          cover_url?: string | null
+          created_at?: string
+          featured?: boolean
+          genre?: string[]
+          id?: string
+          rating?: number
+          status?: Database["public"]["Enums"]["novel_status"]
+          synopsis?: string | null
+          title?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
+      user_libraries: {
+        Row: {
+          added_at: string
+          id: string
+          novel_id: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string
+          id?: string
+          novel_id: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string
+          id?: string
+          novel_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_libraries_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +134,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      novel_status: "ongoing" | "completed" | "hiatus"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +261,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      novel_status: ["ongoing", "completed", "hiatus"],
+    },
   },
 } as const
