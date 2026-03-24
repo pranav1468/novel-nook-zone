@@ -5,70 +5,42 @@ import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden py-24 md:py-32">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.03]">
-        <div
-          className="h-full w-full"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-            backgroundSize: "32px 32px",
-          }}
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-6">
-        <div className="max-w-2xl">
+    <section className="border-b border-border/40 bg-muted/30 py-8 md:py-10">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex items-center justify-between gap-8">
           <motion.div
-            initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-lg"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-1.5 text-xs font-medium text-muted-foreground">
-              <BookOpen className="h-3.5 w-3.5 text-primary" />
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
+              <BookOpen className="h-3 w-3 text-primary" />
               Discover your next obsession
             </div>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Read Stories That Move You
+            </h1>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
+              Thousands of web novels across fantasy, sci-fi, romance, and more.
+            </p>
           </motion.div>
 
-          <motion.h1
-            className="text-4xl font-bold leading-[1.1] tracking-tight text-foreground md:text-6xl"
-            style={{ textWrap: "balance" }}
-            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            Read Stories That
-            <br />
-            Move You
-          </motion.h1>
-
-          <motion.p
-            className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg"
-            style={{ textWrap: "pretty" }}
-            initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            Thousands of web novels across fantasy, sci-fi, romance, and more.
-            Updated daily. Always free to read.
-          </motion.p>
-
           <motion.div
-            className="mt-8 flex flex-wrap gap-3"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden shrink-0 gap-2 sm:flex"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
           >
             <Link to="/browse">
-              <Button size="lg" className="gap-2 active:scale-[0.97] transition-transform">
+              <Button size="sm" className="gap-1.5">
                 Explore Library
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
             <Link to="/auth">
-              <Button variant="outline" size="lg" className="active:scale-[0.97] transition-transform">
-                Create Account
+              <Button variant="outline" size="sm">
+                Sign In
               </Button>
             </Link>
           </motion.div>
