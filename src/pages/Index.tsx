@@ -13,7 +13,6 @@ export default function Index() {
       <RecentlyAdded />
       <GenreCategories />
       <TrendingNovels />
-      <RecentUpdates />
       <FeaturedNovels />
       <RankingsSidebar />
     </main>
