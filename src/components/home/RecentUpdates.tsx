@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
 
 type NovelWithChapters = {
   id: string;
@@ -21,15 +22,18 @@ function coverGradient(title: string): string {
   return `linear-gradient(135deg, hsl(${hue}, 45%, 28%) 0%, hsl(${(hue + 40) % 360}, 35%, 18%) 100%)`;
 }
 
+const PAGE_SIZE = 8;
+
 export default function RecentUpdates() {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
   const { data: novels, isLoading } = useQuery({
     queryKey: ["novels", "recent-updates"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("novels")
         .select("id, title, cover_url, chapters(chapter_number, title, created_at)")
-        .order("updated_at", { ascending: false })
-        .limit(8);
+        .order("updated_at", { ascending: false });
       if (error) throw error;
 
       return (data as unknown as NovelWithChapters[]).map((novel) => ({
@@ -41,6 +45,9 @@ export default function RecentUpdates() {
     },
   });
 
+  const visible = novels?.slice(0, visibleCount);
+  const hasMore = novels && visibleCount < novels.length;
+
   return (
     <section className="py-12">
       <div className="mx-auto max-w-7xl px-6">
@@ -49,20 +56,13 @@ export default function RecentUpdates() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center justify-between"
+          className="flex items-center gap-2"
         >
-          <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-primary" />
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-foreground">Recent Updates</h2>
-              <p className="mt-0.5 text-sm text-muted-foreground">Latest chapter releases</p>
-            </div>
+          <Clock className="h-5 w-5 text-primary" />
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Recent Updates</h2>
+            <p className="mt-0.5 text-sm text-muted-foreground">Latest chapter releases</p>
           </div>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/browse" className="flex items-center gap-1 text-muted-foreground hover:text-primary">
-              See More <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
         </motion.div>
 
         <div className="mt-6 divide-y divide-border">
@@ -77,7 +77,7 @@ export default function RecentUpdates() {
                   </div>
                 </div>
               ))
-            : novels?.map((novel, i) => (
+            : visible?.map((novel, i) => (
                 <motion.div
                   key={novel.id}
                   initial={{ opacity: 0, y: 8 }}
@@ -134,10 +134,14 @@ export default function RecentUpdates() {
               ))}
         </div>
 
-        {novels && novels.length > 0 && (
+        {hasMore && (
           <div className="mt-6 flex justify-center">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/browse">Load More</Link>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            >
+              Load More
             </Button>
           </div>
         )}
