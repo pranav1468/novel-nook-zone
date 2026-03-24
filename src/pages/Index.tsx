@@ -15,6 +15,7 @@ export default function Index() {
       <TrendingNovels />
       <FeaturedNovels />
       <RankingsSidebar />
+      <RecentUpdates />
     </main>
   );
 }
