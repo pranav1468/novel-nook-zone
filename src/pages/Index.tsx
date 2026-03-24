@@ -4,6 +4,7 @@ import TrendingNovels from "@/components/home/TrendingNovels";
 import FeaturedNovels from "@/components/home/FeaturedNovels";
 import GenreCategories from "@/components/home/GenreCategories";
 import RankingsSidebar from "@/components/home/RankingsSidebar";
+import RecentUpdates from "@/components/home/RecentUpdates";
 
 export default function Index() {
   return (
@@ -12,6 +13,7 @@ export default function Index() {
       <RecentlyAdded />
       <GenreCategories />
       <TrendingNovels />
+      <RecentUpdates />
       <FeaturedNovels />
       <RankingsSidebar />
     </main>
