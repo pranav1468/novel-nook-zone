@@ -103,19 +103,12 @@ export default function RecentUpdates() {
                   </Link>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <Link
-                        to={`/novel/${novel.id}`}
-                        className="text-sm font-semibold text-foreground hover:text-primary transition-colors line-clamp-1"
-                      >
-                        {novel.title}
-                      </Link>
-                      {novel.chapters[0] && (
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {formatDistanceToNow(new Date(novel.chapters[0].created_at), { addSuffix: true })}
-                        </span>
-                      )}
-                    </div>
+                    <Link
+                      to={`/novel/${novel.id}`}
+                      className="text-sm font-semibold text-foreground hover:text-primary transition-colors line-clamp-1"
+                    >
+                      {novel.title}
+                    </Link>
 
                     <div className="mt-1.5 space-y-0.5">
                       {novel.chapters.map((ch) => (
@@ -124,12 +117,18 @@ export default function RecentUpdates() {
                           to={`/novel/${novel.id}`}
                           className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
                         >
-                          <span className="font-medium text-foreground/70">#{ch.chapter_number}</span>
-                          <span className="line-clamp-1">{ch.title}</span>
+                          <span className="font-bold text-foreground/80">#{ch.chapter_number}</span>
+                          <span>Chapter {ch.chapter_number} {ch.title}</span>
                         </Link>
                       ))}
                     </div>
                   </div>
+
+                  {novel.chapters[0] && (
+                    <span className="shrink-0 self-start text-xs text-primary/80 pt-1">
+                      {formatDistanceToNow(new Date(novel.chapters[0].created_at), { addSuffix: true })}
+                    </span>
+                  )}
                 </motion.div>
               ))}
         </div>
