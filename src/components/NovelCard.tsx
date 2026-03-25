@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Star, BookOpen } from "lucide-react";
 import { type Novel } from "@/hooks/useNovels";
 import { motion } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
 
 function formatViews(n: number): string {
   if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
@@ -10,7 +11,6 @@ function formatViews(n: number): string {
   return n.toString();
 }
 
-// Generate a deterministic color from title for placeholder covers
 function coverGradient(title: string): string {
   const hash = title.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
   const hues = [24, 200, 160, 280, 340, 45, 120, 310, 220, 60];
@@ -26,6 +26,24 @@ interface NovelCardProps {
 
 export default function NovelCard({ novel, index = 0, size = "default" }: NovelCardProps) {
   const isCompact = size === "compact";
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setTilt({
+      rotateX: (0.5 - y) * 12,
+      rotateY: (x - 0.5) * 12,
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setTilt({ rotateX: 0, rotateY: 0 });
+  }, []);
 
   return (
     <motion.div
@@ -36,44 +54,56 @@ export default function NovelCard({ novel, index = 0, size = "default" }: NovelC
     >
       <Link
         to={`/novel/${novel.id}`}
-        className="group block rounded-lg transition-[box-shadow] duration-200 hover:shadow-lg hover:shadow-primary/5"
+        className="group block"
       >
-        {/* Cover */}
+        {/* 3D Tilt container */}
         <div
-          className={`relative overflow-hidden rounded-lg ${isCompact ? "aspect-[3/4]" : "aspect-[2/3]"}`}
-          style={{ background: coverGradient(novel.title) }}
+          ref={cardRef}
+          className="tilt-card rounded-lg transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            transform: `perspective(800px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+            transition: tilt.rotateX === 0 ? "transform 0.5s ease" : "transform 0.1s ease",
+          }}
         >
-          {novel.cover_url && (
-            <img
-              src={novel.cover_url}
-              alt={novel.title}
-              className="absolute inset-0 h-full w-full object-cover"
-              loading="lazy"
-            />
-          )}
+          {/* Cover */}
+          <div
+            className={`relative overflow-hidden rounded-lg ${isCompact ? "aspect-[3/4]" : "aspect-[2/3]"}`}
+            style={{ background: coverGradient(novel.title) }}
+          >
+            {novel.cover_url && (
+              <img
+                src={novel.cover_url}
+                alt={novel.title}
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+            )}
 
-          {/* Title on cover */}
-          <div className="absolute inset-0 flex flex-col justify-end p-3">
-            <p
-              className="text-xs font-bold uppercase tracking-wider text-white/90"
-              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}
-            >
-              {novel.title}
-            </p>
+            {/* Title on cover */}
+            <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/50 to-transparent">
+              <p
+                className="text-xs font-bold uppercase tracking-wider text-white/90"
+                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}
+              >
+                {novel.title}
+              </p>
+            </div>
+
+            {/* Status badge */}
+            <div className="absolute right-2 top-2">
+              <Badge
+                variant="secondary"
+                className="text-[10px] capitalize bg-background/80 text-foreground backdrop-blur-sm border-0"
+              >
+                {novel.status}
+              </Badge>
+            </div>
+
+            {/* Hover glow overlay */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/15 via-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </div>
-
-          {/* Status badge */}
-          <div className="absolute right-2 top-2">
-            <Badge
-              variant="secondary"
-              className="text-[10px] capitalize bg-background/80 text-foreground backdrop-blur-sm border-0"
-            >
-              {novel.status}
-            </Badge>
-          </div>
-
-          {/* Hover overlay */}
-          <div className="absolute inset-0 bg-primary/10 opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
 
         {/* Info */}
