@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CursorSpotlight from "@/components/CursorSpotlight";
 import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import NovelDetail from "./pages/NovelDetail";
@@ -22,6 +23,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <CursorSpotlight />
           <Navbar />
           <Routes>
             <Route path="/" element={<Index />} />
