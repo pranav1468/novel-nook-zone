@@ -160,10 +160,12 @@ export default function NovelDetail() {
 
             {/* Actions */}
             <div className="flex gap-3">
-              <Button className="gap-2 active:scale-[0.97] transition-transform">
-                <BookOpen className="h-4 w-4" />
-                Start Reading
-              </Button>
+              <Link to={`/novel/${novel.id}/chapter/1`}>
+                <Button className="gap-2 active:scale-[0.97] transition-transform">
+                  <BookOpen className="h-4 w-4" />
+                  Start Reading
+                </Button>
+              </Link>
               <Button variant="outline" className="gap-2 active:scale-[0.97] transition-transform">
                 <Bookmark className="h-4 w-4" />
                 Add to Library
@@ -187,9 +189,10 @@ export default function NovelDetail() {
           {chapters && chapters.length > 0 ? (
             <div className="space-y-1">
               {visibleChapters?.map((ch) => (
-                <div
+                <Link
                   key={ch.id}
-                  className="flex items-center justify-between rounded-lg border border-border/40 bg-card px-4 py-3 text-sm hover:bg-muted/50 transition-colors cursor-pointer"
+                  to={`/novel/${novel.id}/chapter/${ch.chapter_number}`}
+                  className="flex items-center justify-between rounded-lg border border-border/40 bg-card px-4 py-3 text-sm hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-medium text-muted-foreground w-8">
@@ -200,7 +203,7 @@ export default function NovelDetail() {
                   <span className="text-xs text-muted-foreground">
                     {new Date(ch.created_at).toLocaleDateString()}
                   </span>
-                </div>
+                </Link>
               ))}
 
               {chapters.length > 20 && (
