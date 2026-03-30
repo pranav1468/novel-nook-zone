@@ -197,7 +197,7 @@ export default function ChapterReader() {
         className="min-h-screen py-12 md:py-16 transition-colors duration-500"
         style={{ backgroundColor: rt.bg, color: rt.text }}
       >
-        <div className="mx-auto max-w-2xl px-6">
+        <div className="mx-auto px-6 transition-all duration-300" style={{ maxWidth: `${maxWidth}px` }}>
           {/* Top nav */}
           <motion.div
             className="flex items-center justify-between mb-8"
