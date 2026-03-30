@@ -69,10 +69,22 @@ function useNovelMeta(novelId: string) {
 }
 
 const FONTS = [
-  { label: "Serif", value: "Georgia, 'Times New Roman', serif" },
-  { label: "Sans", value: "system-ui, -apple-system, sans-serif" },
-  { label: "Mono", value: "'Courier New', monospace" },
+  { label: "Serif", value: "Georgia, 'Times New Roman', serif", preview: "Aa" },
+  { label: "Sans", value: "system-ui, -apple-system, sans-serif", preview: "Aa" },
+  { label: "Mono", value: "'Courier New', monospace", preview: "Aa" },
+  { label: "Dyslexic", value: "'Comic Sans MS', 'OpenDyslexic', cursive", preview: "Aa" },
+  { label: "Literary", value: "'Palatino Linotype', 'Book Antiqua', Palatino, serif", preview: "Aa" },
 ];
+
+const STORAGE_KEY = "novelhub-reader-settings";
+
+function loadSettings() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return null;
+}
 
 export default function ChapterReader() {
   const { id, chapter } = useParams<{ id: string; chapter: string }>();
@@ -82,17 +94,24 @@ export default function ChapterReader() {
   const { data: chapterData, isLoading } = useChapter(id || "", chapterNum);
   const { data: novelMeta } = useNovelMeta(id || "");
 
-  const [fontSize, setFontSize] = useState(18);
-  const [fontIdx, setFontIdx] = useState(0);
-  const [lineHeight, setLineHeight] = useState(1.8);
+  const saved = loadSettings();
+  const [fontSize, setFontSize] = useState(saved?.fontSize ?? 18);
+  const [fontIdx, setFontIdx] = useState(saved?.fontIdx ?? 0);
+  const [lineHeight, setLineHeight] = useState(saved?.lineHeight ?? 1.8);
+  const [maxWidth, setMaxWidth] = useState(saved?.maxWidth ?? 672);
   const [showSettings, setShowSettings] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [readerThemeIdx, setReaderThemeIdx] = useState(() => {
     const saved = localStorage.getItem("novelhub-reader-theme");
-    return saved ? parseInt(saved, 10) : 1; // default to Dark
+    return saved ? parseInt(saved, 10) : 1;
   });
 
   const rt = READER_THEMES[readerThemeIdx];
+
+  // Persist all settings
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ fontSize, fontIdx, lineHeight, maxWidth }));
+  }, [fontSize, fontIdx, lineHeight, maxWidth]);
 
   useEffect(() => {
     localStorage.setItem("novelhub-reader-theme", String(readerThemeIdx));
@@ -178,7 +197,7 @@ export default function ChapterReader() {
         className="min-h-screen py-12 md:py-16 transition-colors duration-500"
         style={{ backgroundColor: rt.bg, color: rt.text }}
       >
-        <div className="mx-auto max-w-2xl px-6">
+        <div className="mx-auto px-6 transition-all duration-300" style={{ maxWidth: `${maxWidth}px` }}>
           {/* Top nav */}
           <motion.div
             className="flex items-center justify-between mb-8"
@@ -270,21 +289,23 @@ export default function ChapterReader() {
                   {/* Font family */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted }}>
-                      <Type className="h-3.5 w-3.5" /> Font
+                      <Type className="h-3.5 w-3.5" /> Font Family
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       {FONTS.map((f, i) => (
                         <button
                           key={f.label}
-                          className="flex-1 text-xs rounded-md py-1.5 px-3 font-medium transition-all"
+                          className="flex flex-col items-center gap-0.5 rounded-lg py-2 px-3 transition-all min-w-[60px]"
                           style={{
                             backgroundColor: fontIdx === i ? rt.accent : "transparent",
                             color: fontIdx === i ? "#fff" : rt.text,
                             border: `1px solid ${fontIdx === i ? rt.accent : rt.border}`,
+                            fontFamily: f.value,
                           }}
                           onClick={() => setFontIdx(i)}
                         >
-                          {f.label}
+                          <span className="text-base leading-none">{f.preview}</span>
+                          <span className="text-[10px] font-medium" style={{ fontFamily: "system-ui" }}>{f.label}</span>
                         </button>
                       ))}
                     </div>
@@ -293,7 +314,7 @@ export default function ChapterReader() {
                   {/* Font size */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium" style={{ color: rt.muted }}>
-                      Size: {fontSize}px
+                      Font Size: {fontSize}px
                     </label>
                     <div className="flex items-center gap-3">
                       <Button
@@ -328,16 +349,39 @@ export default function ChapterReader() {
                   {/* Line height */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium" style={{ color: rt.muted }}>
-                      Line Height: {lineHeight.toFixed(1)}
+                      Line Spacing: {lineHeight.toFixed(1)}
                     </label>
                     <Slider
                       value={[lineHeight]}
                       min={1.2}
-                      max={2.4}
+                      max={2.8}
                       step={0.1}
                       onValueChange={([v]) => setLineHeight(v)}
                     />
                   </div>
+
+                  {/* Content width */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium" style={{ color: rt.muted }}>
+                      Content Width: {maxWidth}px
+                    </label>
+                    <Slider
+                      value={[maxWidth]}
+                      min={480}
+                      max={900}
+                      step={10}
+                      onValueChange={([v]) => setMaxWidth(v)}
+                    />
+                  </div>
+
+                  {/* Reset button */}
+                  <button
+                    className="text-xs font-medium underline underline-offset-2 opacity-60 hover:opacity-100 transition-opacity"
+                    style={{ color: rt.muted }}
+                    onClick={() => { setFontSize(18); setFontIdx(0); setLineHeight(1.8); setMaxWidth(672); setReaderThemeIdx(1); }}
+                  >
+                    Reset to defaults
+                  </button>
                 </div>
               </motion.div>
             )}
