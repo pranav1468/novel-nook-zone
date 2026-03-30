@@ -170,11 +170,14 @@ export default function ChapterReader() {
     <>
       {/* Reading progress bar */}
       <div
-        className="fixed top-0 left-0 h-[3px] z-[70] bg-primary origin-left"
-        style={{ transform: `scaleX(${scrollProgress / 100})` }}
+        className="fixed top-0 left-0 h-[3px] z-[70] origin-left"
+        style={{ transform: `scaleX(${scrollProgress / 100})`, backgroundColor: rt.accent }}
       />
 
-      <main className="min-h-screen py-12 md:py-16">
+      <main
+        className="min-h-screen py-12 md:py-16 transition-colors duration-500"
+        style={{ backgroundColor: rt.bg, color: rt.text }}
+      >
         <div className="mx-auto max-w-2xl px-6">
           {/* Top nav */}
           <motion.div
@@ -185,7 +188,8 @@ export default function ChapterReader() {
           >
             <Link
               to={`/novel/${id}`}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
+              style={{ color: rt.muted }}
             >
               <ArrowLeft className="h-4 w-4" />
               {novelMeta?.title || "Back"}
@@ -196,6 +200,7 @@ export default function ChapterReader() {
               size="icon"
               onClick={() => setShowSettings(!showSettings)}
               className="relative"
+              style={{ color: rt.text }}
             >
               <Settings2 className="h-4 w-4" />
             </Button>
@@ -210,44 +215,84 @@ export default function ChapterReader() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden mb-8"
               >
-                <div className="rounded-xl border border-border bg-card p-5 space-y-5">
+                <div
+                  className="rounded-xl p-5 space-y-5 transition-colors duration-300"
+                  style={{ backgroundColor: rt.card, borderColor: rt.border, border: `1px solid ${rt.border}` }}
+                >
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">
+                    <h3 className="text-sm font-semibold" style={{ color: rt.text }}>
                       Reading Settings
                     </h3>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-7 w-7"
+                      style={{ color: rt.text }}
                       onClick={() => setShowSettings(false)}
                     >
                       <X className="h-3.5 w-3.5" />
                     </Button>
                   </div>
 
+                  {/* Reader Theme */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted }}>
+                      <Palette className="h-3.5 w-3.5" /> Theme
+                    </label>
+                    <div className="flex gap-2">
+                      {READER_THEMES.map((theme, i) => (
+                        <button
+                          key={theme.label}
+                          onClick={() => setReaderThemeIdx(i)}
+                          className="flex flex-col items-center gap-1 flex-1 rounded-lg p-2 transition-all"
+                          style={{
+                            border: readerThemeIdx === i ? `2px solid ${rt.accent}` : `1px solid ${rt.border}`,
+                            backgroundColor: theme.bg,
+                          }}
+                        >
+                          <div
+                            className="w-full h-6 rounded"
+                            style={{ backgroundColor: theme.bg, border: `1px solid ${theme.border}` }}
+                          >
+                            <div className="flex flex-col gap-0.5 p-1">
+                              <div className="h-[2px] w-3/4 rounded" style={{ backgroundColor: theme.text }} />
+                              <div className="h-[2px] w-1/2 rounded" style={{ backgroundColor: theme.muted }} />
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-medium" style={{ color: theme.text }}>
+                            {theme.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Font family */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                    <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted }}>
                       <Type className="h-3.5 w-3.5" /> Font
                     </label>
                     <div className="flex gap-2">
                       {FONTS.map((f, i) => (
-                        <Button
+                        <button
                           key={f.label}
-                          variant={fontIdx === i ? "default" : "outline"}
-                          size="sm"
-                          className="flex-1 text-xs"
+                          className="flex-1 text-xs rounded-md py-1.5 px-3 font-medium transition-all"
+                          style={{
+                            backgroundColor: fontIdx === i ? rt.accent : "transparent",
+                            color: fontIdx === i ? "#fff" : rt.text,
+                            border: `1px solid ${fontIdx === i ? rt.accent : rt.border}`,
+                          }}
                           onClick={() => setFontIdx(i)}
                         >
                           {f.label}
-                        </Button>
+                        </button>
                       ))}
                     </div>
                   </div>
 
                   {/* Font size */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground">
+                    <label className="text-xs font-medium" style={{ color: rt.muted }}>
                       Size: {fontSize}px
                     </label>
                     <div className="flex items-center gap-3">
@@ -255,6 +300,7 @@ export default function ChapterReader() {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
+                        style={{ borderColor: rt.border, color: rt.text }}
                         onClick={() => setFontSize((s) => Math.max(12, s - 1))}
                       >
                         <Minus className="h-3.5 w-3.5" />
@@ -271,6 +317,7 @@ export default function ChapterReader() {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
+                        style={{ borderColor: rt.border, color: rt.text }}
                         onClick={() => setFontSize((s) => Math.min(28, s + 1))}
                       >
                         <Plus className="h-3.5 w-3.5" />
@@ -280,7 +327,7 @@ export default function ChapterReader() {
 
                   {/* Line height */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground">
+                    <label className="text-xs font-medium" style={{ color: rt.muted }}>
                       Line Height: {lineHeight.toFixed(1)}
                     </label>
                     <Slider
@@ -303,12 +350,12 @@ export default function ChapterReader() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-xs font-medium uppercase tracking-widest text-primary mb-2">
+            <p className="text-xs font-medium uppercase tracking-widest mb-2" style={{ color: rt.accent }}>
               Chapter {chapterData.chapter_number}
             </p>
             <h1
-              className="text-2xl md:text-3xl font-bold text-foreground"
-              style={{ textWrap: "balance" } as React.CSSProperties}
+              className="text-2xl md:text-3xl font-bold"
+              style={{ color: rt.text, textWrap: "balance" } as React.CSSProperties}
             >
               {chapterData.title}
             </h1>
@@ -316,11 +363,12 @@ export default function ChapterReader() {
 
           {/* Chapter content */}
           <motion.article
-            className="prose prose-neutral dark:prose-invert max-w-none"
+            className="max-w-none"
             style={{
               fontFamily: FONTS[fontIdx].value,
               fontSize: `${fontSize}px`,
               lineHeight: lineHeight,
+              color: rt.text,
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -328,12 +376,12 @@ export default function ChapterReader() {
           >
             {chapterData.content ? (
               chapterData.content.split("\n\n").map((para, i) => (
-                <p key={i} className="mb-6 text-foreground/85">
+                <p key={i} className="mb-6" style={{ opacity: 0.85 }}>
                   {para}
                 </p>
               ))
             ) : (
-              <p className="text-muted-foreground italic">
+              <p className="italic" style={{ color: rt.muted }}>
                 This chapter has no content yet.
               </p>
             )}
@@ -341,33 +389,35 @@ export default function ChapterReader() {
 
           {/* Bottom navigation */}
           <motion.div
-            className="mt-16 flex items-center justify-between border-t border-border pt-6"
+            className="mt-16 flex items-center justify-between pt-6"
+            style={{ borderTop: `1px solid ${rt.border}` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <Button
-              variant="outline"
-              className="gap-2"
+            <button
+              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+              style={{ border: `1px solid ${rt.border}`, color: rt.text }}
               disabled={!hasPrev}
               onClick={() => hasPrev && goTo(chapterNum - 1)}
             >
               <ChevronLeft className="h-4 w-4" />
               Previous
-            </Button>
+            </button>
 
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs" style={{ color: rt.muted }}>
               {chapterNum} / {totalChapters}
             </span>
 
-            <Button
-              className="gap-2"
+            <button
+              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+              style={{ backgroundColor: rt.accent, color: "#fff" }}
               disabled={!hasNext}
               onClick={() => hasNext && goTo(chapterNum + 1)}
             >
               Next
               <ChevronRight className="h-4 w-4" />
-            </Button>
+            </button>
           </motion.div>
         </div>
       </main>
