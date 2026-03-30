@@ -13,9 +13,18 @@ import {
   Minus,
   Plus,
   X,
+  Palette,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+
+const READER_THEMES = [
+  { label: "Light", bg: "#ffffff", text: "#1a1a2e", card: "#f8f8f8", border: "#e2e2e2", accent: "#e8740c", muted: "#6b7280" },
+  { label: "Dark", bg: "#141620", text: "#d4d4dc", card: "#1c1e2e", border: "#2a2d3e", accent: "#e8740c", muted: "#8b8fa0" },
+  { label: "Sepia", bg: "#f4ecd8", text: "#5b4636", card: "#ede4cf", border: "#d4c9ad", accent: "#8b6914", muted: "#8a7b6b" },
+  { label: "Forest", bg: "#1a2318", text: "#c8d6c0", card: "#222e1f", border: "#2e3d28", accent: "#6abf4b", muted: "#7a9470" },
+  { label: "Ocean", bg: "#0f1926", text: "#b8cfe0", card: "#162030", border: "#1e3045", accent: "#3ba5d9", muted: "#6a8fa8" },
+] as const;
 
 type Chapter = {
   id: string;
