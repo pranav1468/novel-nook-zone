@@ -94,17 +94,24 @@ export default function ChapterReader() {
   const { data: chapterData, isLoading } = useChapter(id || "", chapterNum);
   const { data: novelMeta } = useNovelMeta(id || "");
 
-  const [fontSize, setFontSize] = useState(18);
-  const [fontIdx, setFontIdx] = useState(0);
-  const [lineHeight, setLineHeight] = useState(1.8);
+  const saved = loadSettings();
+  const [fontSize, setFontSize] = useState(saved?.fontSize ?? 18);
+  const [fontIdx, setFontIdx] = useState(saved?.fontIdx ?? 0);
+  const [lineHeight, setLineHeight] = useState(saved?.lineHeight ?? 1.8);
+  const [maxWidth, setMaxWidth] = useState(saved?.maxWidth ?? 672);
   const [showSettings, setShowSettings] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [readerThemeIdx, setReaderThemeIdx] = useState(() => {
     const saved = localStorage.getItem("novelhub-reader-theme");
-    return saved ? parseInt(saved, 10) : 1; // default to Dark
+    return saved ? parseInt(saved, 10) : 1;
   });
 
   const rt = READER_THEMES[readerThemeIdx];
+
+  // Persist all settings
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ fontSize, fontIdx, lineHeight, maxWidth }));
+  }, [fontSize, fontIdx, lineHeight, maxWidth]);
 
   useEffect(() => {
     localStorage.setItem("novelhub-reader-theme", String(readerThemeIdx));
