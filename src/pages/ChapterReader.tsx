@@ -87,6 +87,16 @@ export default function ChapterReader() {
   const [lineHeight, setLineHeight] = useState(1.8);
   const [showSettings, setShowSettings] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [readerThemeIdx, setReaderThemeIdx] = useState(() => {
+    const saved = localStorage.getItem("novelhub-reader-theme");
+    return saved ? parseInt(saved, 10) : 1; // default to Dark
+  });
+
+  const rt = READER_THEMES[readerThemeIdx];
+
+  useEffect(() => {
+    localStorage.setItem("novelhub-reader-theme", String(readerThemeIdx));
+  }, [readerThemeIdx]);
 
   const totalChapters = novelMeta?.chapter_count || 0;
   const hasPrev = chapterNum > 1;
