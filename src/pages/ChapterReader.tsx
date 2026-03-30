@@ -69,10 +69,22 @@ function useNovelMeta(novelId: string) {
 }
 
 const FONTS = [
-  { label: "Serif", value: "Georgia, 'Times New Roman', serif" },
-  { label: "Sans", value: "system-ui, -apple-system, sans-serif" },
-  { label: "Mono", value: "'Courier New', monospace" },
+  { label: "Serif", value: "Georgia, 'Times New Roman', serif", preview: "Aa" },
+  { label: "Sans", value: "system-ui, -apple-system, sans-serif", preview: "Aa" },
+  { label: "Mono", value: "'Courier New', monospace", preview: "Aa" },
+  { label: "Dyslexic", value: "'Comic Sans MS', 'OpenDyslexic', cursive", preview: "Aa" },
+  { label: "Literary", value: "'Palatino Linotype', 'Book Antiqua', Palatino, serif", preview: "Aa" },
 ];
+
+const STORAGE_KEY = "novelhub-reader-settings";
+
+function loadSettings() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return null;
+}
 
 export default function ChapterReader() {
   const { id, chapter } = useParams<{ id: string; chapter: string }>();
