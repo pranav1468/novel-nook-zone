@@ -97,6 +97,33 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_progress: {
+        Row: {
+          chapter_number: number
+          id: string
+          novel_id: string
+          scroll_position: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter_number?: number
+          id?: string
+          novel_id: string
+          scroll_position?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chapter_number?: number
+          id?: string
+          novel_id?: string
+          scroll_position?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_libraries: {
         Row: {
           added_at: string

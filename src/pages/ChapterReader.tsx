@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+import AutoScrollTTS from "@/components/reader/AutoScrollTTS";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 const READER_THEMES = [
   { label: "Light", bg: "#ffffff", text: "#1a1a2e", card: "#f8f8f8", border: "#e2e2e2", accent: "#e8740c", muted: "#6b7280" },
@@ -107,6 +109,9 @@ export default function ChapterReader() {
   });
 
   const rt = READER_THEMES[readerThemeIdx];
+
+  // Reading progress sync
+  const { savedProgress, isLoggedIn } = useReadingProgress(id || "", chapterNum, scrollProgress);
 
   // Persist all settings
   useEffect(() => {
@@ -404,6 +409,18 @@ export default function ChapterReader() {
               {chapterData.title}
             </h1>
           </motion.div>
+
+          {/* Auto-scroll & TTS toolbar */}
+          <div className="mb-6">
+            <AutoScrollTTS rt={rt} content={chapterData.content} />
+          </div>
+
+          {/* Reading progress sync indicator */}
+          {isLoggedIn && (
+            <p className="text-[10px] mb-4" style={{ color: rt.muted }}>
+              ✓ Progress synced to your account
+            </p>
+          )}
 
           {/* Chapter content */}
           <motion.article
