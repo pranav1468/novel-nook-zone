@@ -141,7 +141,30 @@ export default function ChapterReader() {
     return () => window.removeEventListener("keydown", handler);
   }, [hasPrev, hasNext, chapterNum, goTo]);
 
-  // Reading progress
+  // Preload adjacent chapters
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const preload = (num: number) => {
+      if (num < 1 || (totalChapters > 0 && num > totalChapters)) return;
+      queryClient.prefetchQuery({
+        queryKey: ["chapter", id, num],
+        queryFn: async () => {
+          const { data, error } = await supabase
+            .from("chapters")
+            .select("*")
+            .eq("novel_id", id!)
+            .eq("chapter_number", num)
+            .single();
+          if (error) throw error;
+          return data;
+        },
+        staleTime: 5 * 60_000,
+      });
+    };
+    preload(chapterNum + 1);
+    preload(chapterNum + 2);
+    if (chapterNum > 1) preload(chapterNum - 1);
+  }, [id, chapterNum, totalChapters, queryClient]);
   useEffect(() => {
     const onScroll = () => {
       const scrolled = window.scrollY;
