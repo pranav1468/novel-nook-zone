@@ -7,12 +7,14 @@ import RankingsSidebar from "@/components/home/RankingsSidebar";
 import RecentUpdates from "@/components/home/RecentUpdates";
 import StatsCounter from "@/components/home/StatsCounter";
 import NovelMarquee from "@/components/home/NovelMarquee";
+import ContinueReading from "@/components/home/ContinueReading";
 
 export default function Index() {
   return (
     <main>
       <HeroSection />
       <NovelMarquee />
+      <ContinueReading />
       <StatsCounter />
       <RecentlyAdded />
       <GenreCategories />
