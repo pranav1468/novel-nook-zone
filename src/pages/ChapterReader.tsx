@@ -110,6 +110,9 @@ export default function ChapterReader() {
 
   const rt = READER_THEMES[readerThemeIdx];
 
+  // Reading progress sync
+  const { savedProgress, isLoggedIn } = useReadingProgress(id || "", chapterNum, scrollProgress);
+
   // Persist all settings
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ fontSize, fontIdx, lineHeight, maxWidth }));
