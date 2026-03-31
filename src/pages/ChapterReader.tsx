@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+import AutoScrollTTS from "@/components/reader/AutoScrollTTS";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 const READER_THEMES = [
   { label: "Light", bg: "#ffffff", text: "#1a1a2e", card: "#f8f8f8", border: "#e2e2e2", accent: "#e8740c", muted: "#6b7280" },
