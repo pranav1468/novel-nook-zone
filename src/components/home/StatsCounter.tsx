@@ -50,36 +50,31 @@ export default function StatsCounter() {
   ];
 
   return (
-    <section className="py-4">
+    <section className="py-6">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-2 gap-4 md:grid-cols-4"
+          className="flex flex-wrap justify-between gap-6 md:gap-8"
         >
-          {items.map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative flex flex-col items-center gap-2 rounded-xl border border-border/60 bg-card/50 backdrop-blur-sm p-6 text-center transition-all duration-300 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 transition-transform duration-300 group-hover:scale-110">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <span className="text-2xl font-bold text-foreground md:text-3xl">
-                  <AnimatedNumber target={item.value} />
-                </span>
-                <span className="text-xs font-medium text-muted-foreground">{item.label}</span>
-              </motion.div>
-            );
-          })}
+          {items.map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="flex flex-col items-start gap-0.5"
+            >
+              <span className="text-2xl font-bold text-primary md:text-3xl lg:text-4xl">
+                <AnimatedNumber target={item.value} />
+                {item.label === "Readers" || item.label === "Novels" ? "+" : ""}
+              </span>
+              <span className="text-sm font-medium text-muted-foreground">{item.label}</span>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>
