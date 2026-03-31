@@ -410,6 +410,18 @@ export default function ChapterReader() {
             </h1>
           </motion.div>
 
+          {/* Auto-scroll & TTS toolbar */}
+          <div className="mb-6">
+            <AutoScrollTTS rt={rt} content={chapterData.content} />
+          </div>
+
+          {/* Reading progress sync indicator */}
+          {isLoggedIn && (
+            <p className="text-[10px] mb-4" style={{ color: rt.muted }}>
+              ✓ Progress synced to your account
+            </p>
+          )}
+
           {/* Chapter content */}
           <motion.article
             className="max-w-none"
