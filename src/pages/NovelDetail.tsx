@@ -6,6 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Star, Eye, BookOpen, Clock, ArrowLeft, Bookmark, ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import NovelVoting from "@/components/community/NovelVoting";
+import ReviewSection from "@/components/community/ReviewSection";
+import CommentSection from "@/components/community/CommentSection";
 
 function formatViews(n: number): string {
   if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
