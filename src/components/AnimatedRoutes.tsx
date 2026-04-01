@@ -6,6 +6,8 @@ import NovelDetail from "@/pages/NovelDetail";
 import ChapterReader from "@/pages/ChapterReader";
 import Rankings from "@/pages/Rankings";
 import Auth from "@/pages/Auth";
+import Requests from "@/pages/Requests";
+import Contribute from "@/pages/Contribute";
 import NotFound from "@/pages/NotFound";
 
 const pageVariants = {
