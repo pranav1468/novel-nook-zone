@@ -6,6 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Star, Eye, BookOpen, Clock, ArrowLeft, Bookmark, ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import NovelVoting from "@/components/community/NovelVoting";
+import ReviewSection from "@/components/community/ReviewSection";
+import CommentSection from "@/components/community/CommentSection";
 
 function formatViews(n: number): string {
   if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
@@ -159,7 +162,7 @@ export default function NovelDetail() {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3 items-center">
               <Link to={`/novel/${novel.id}/chapter/1`}>
                 <Button className="gap-2 active:scale-[0.97] transition-transform">
                   <BookOpen className="h-4 w-4" />
@@ -171,6 +174,9 @@ export default function NovelDetail() {
                 Add to Library
               </Button>
             </div>
+
+            {/* Voting */}
+            <NovelVoting novelId={novel.id} />
           </motion.div>
         </div>
 
@@ -230,6 +236,27 @@ export default function NovelDetail() {
               <p className="mt-1 text-xs text-muted-foreground/60">Check back soon for updates</p>
             </div>
           )}
+        </motion.div>
+        {/* Reviews */}
+        <motion.div
+          className="mt-12"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <ReviewSection novelId={novel.id} />
+        </motion.div>
+
+        {/* Comments */}
+        <motion.div
+          className="mt-12 mb-12"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <CommentSection novelId={novel.id} />
         </motion.div>
       </div>
     </main>

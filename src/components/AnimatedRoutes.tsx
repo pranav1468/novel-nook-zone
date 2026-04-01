@@ -6,6 +6,8 @@ import NovelDetail from "@/pages/NovelDetail";
 import ChapterReader from "@/pages/ChapterReader";
 import Rankings from "@/pages/Rankings";
 import Auth from "@/pages/Auth";
+import Requests from "@/pages/Requests";
+import Contribute from "@/pages/Contribute";
 import NotFound from "@/pages/NotFound";
 
 const pageVariants = {
@@ -39,6 +41,8 @@ export default function AnimatedRoutes() {
           <Route path="/novel/:id/chapter/:chapter" element={<ChapterReader />} />
           <Route path="/rankings" element={<Rankings />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/requests" element={<Requests />} />
+          <Route path="/contribute" element={<Contribute />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>

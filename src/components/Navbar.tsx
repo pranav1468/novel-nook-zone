@@ -11,6 +11,8 @@ const navLinks = [
   { to: "/", label: "Home" },
   { to: "/browse", label: "Browse" },
   { to: "/rankings", label: "Rankings" },
+  { to: "/requests", label: "Requests" },
+  { to: "/contribute", label: "Contribute" },
 ];
 
 export default function Navbar() {

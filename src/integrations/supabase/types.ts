@@ -49,6 +49,204 @@ export type Database = {
           },
         ]
       }
+      contributions: {
+        Row: {
+          contribution_type: string
+          created_at: string
+          id: string
+          language_from: string | null
+          language_to: string | null
+          message: string
+          novel_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          contribution_type: string
+          created_at?: string
+          id?: string
+          language_from?: string | null
+          language_to?: string | null
+          message: string
+          novel_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          contribution_type?: string
+          created_at?: string
+          id?: string
+          language_from?: string | null
+          language_to?: string | null
+          message?: string
+          novel_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contributions_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      novel_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          likes_count: number
+          novel_id: string
+          parent_id: string | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          novel_id: string
+          parent_id?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          novel_id?: string
+          parent_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "novel_comments_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "novel_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "novel_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      novel_requests: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          original_language: string | null
+          source_url: string | null
+          status: string
+          title: string
+          user_id: string
+          vote_count: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          original_language?: string | null
+          source_url?: string | null
+          status?: string
+          title: string
+          user_id: string
+          vote_count?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          original_language?: string | null
+          source_url?: string | null
+          status?: string
+          title?: string
+          user_id?: string
+          vote_count?: number
+        }
+        Relationships: []
+      }
+      novel_reviews: {
+        Row: {
+          content: string
+          created_at: string
+          helpful_count: number
+          id: string
+          novel_id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          novel_id: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          novel_id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "novel_reviews_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      novel_votes: {
+        Row: {
+          created_at: string
+          id: string
+          novel_id: string
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          novel_id: string
+          user_id: string
+          vote_type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          novel_id?: string
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "novel_votes_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       novels: {
         Row: {
           author: string
@@ -123,6 +321,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      request_votes: {
+        Row: {
+          created_at: string
+          id: string
+          request_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          request_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          request_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_votes_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "novel_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_libraries: {
         Row: {
