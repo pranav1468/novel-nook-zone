@@ -162,7 +162,7 @@ export default function NovelDetail() {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3 items-center">
               <Link to={`/novel/${novel.id}/chapter/1`}>
                 <Button className="gap-2 active:scale-[0.97] transition-transform">
                   <BookOpen className="h-4 w-4" />
@@ -174,6 +174,9 @@ export default function NovelDetail() {
                 Add to Library
               </Button>
             </div>
+
+            {/* Voting */}
+            <NovelVoting novelId={novel.id} />
           </motion.div>
         </div>
 
