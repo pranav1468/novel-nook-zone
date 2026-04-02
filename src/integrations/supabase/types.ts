@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+          xp_reward: number
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          icon?: string
+          id?: string
+          name: string
+          requirement_type: string
+          requirement_value?: number
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          requirement_type?: string
+          requirement_value?: number
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       chapters: {
         Row: {
           chapter_number: number
@@ -92,6 +128,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notification_preferences: {
+        Row: {
+          achievements: boolean
+          created_at: string
+          id: string
+          new_chapters: boolean
+          recommendations: boolean
+          user_id: string
+        }
+        Insert: {
+          achievements?: boolean
+          created_at?: string
+          id?: string
+          new_chapters?: boolean
+          recommendations?: boolean
+          user_id: string
+        }
+        Update: {
+          achievements?: boolean
+          created_at?: string
+          id?: string
+          new_chapters?: boolean
+          recommendations?: boolean
+          user_id?: string
+        }
+        Relationships: []
       }
       novel_comments: {
         Row: {
@@ -295,6 +358,75 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_list_items: {
+        Row: {
+          added_at: string
+          id: string
+          list_id: string
+          novel_id: string
+          sort_order: number
+        }
+        Insert: {
+          added_at?: string
+          id?: string
+          list_id: string
+          novel_id: string
+          sort_order?: number
+        }
+        Update: {
+          added_at?: string
+          id?: string
+          list_id?: string
+          novel_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_list_items_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "reading_lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_list_items_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reading_lists: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reading_progress: {
         Row: {
           chapter_number: number
@@ -351,6 +483,35 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_libraries: {
         Row: {
           added_at: string
@@ -379,6 +540,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_login_date: string
+          level: number
+          longest_streak: number
+          total_logins: number
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_login_date?: string
+          level?: number
+          longest_streak?: number
+          total_logins?: number
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_login_date?: string
+          level?: number
+          longest_streak?: number
+          total_logins?: number
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
       }
     }
     Views: {
