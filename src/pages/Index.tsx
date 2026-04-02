@@ -8,6 +8,7 @@ import RecentUpdates from "@/components/home/RecentUpdates";
 import StatsCounter from "@/components/home/StatsCounter";
 import NovelMarquee from "@/components/home/NovelMarquee";
 import ContinueReading from "@/components/home/ContinueReading";
+import AIRecommendations from "@/components/engagement/AIRecommendations";
 
 export default function Index() {
   return (
@@ -17,6 +18,7 @@ export default function Index() {
       <ContinueReading />
       <StatsCounter />
       <RecentlyAdded />
+      <AIRecommendations />
       <GenreCategories />
       <TrendingNovels />
       <FeaturedNovels />

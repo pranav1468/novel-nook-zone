@@ -175,7 +175,11 @@ export default function NovelDetail() {
                 <Bookmark className="h-4 w-4" />
                 Add to Library
               </Button>
+              <AddToListButton novelId={novel.id} />
             </div>
+
+            {/* Share */}
+            <SocialShare title={novel.title} />
 
             {/* Voting */}
             <NovelVoting novelId={novel.id} />
