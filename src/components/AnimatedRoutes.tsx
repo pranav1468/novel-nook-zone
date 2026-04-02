@@ -44,6 +44,7 @@ export default function AnimatedRoutes() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/contribute" element={<Contribute />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
