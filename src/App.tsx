@@ -8,8 +8,21 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import AnimatedRoutes from "@/components/AnimatedRoutes";
+import { useAutoLogin } from "@/hooks/useEngagement";
 
 const queryClient = new QueryClient();
+
+function AppContent() {
+  useAutoLogin();
+  return (
+    <>
+      <CursorSpotlight />
+      <Navbar />
+      <AnimatedRoutes />
+      <Footer />
+    </>
+  );
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -18,10 +31,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <CursorSpotlight />
-          <Navbar />
-          <AnimatedRoutes />
-          <Footer />
+          <AppContent />
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>

@@ -8,6 +8,7 @@ import Rankings from "@/pages/Rankings";
 import Auth from "@/pages/Auth";
 import Requests from "@/pages/Requests";
 import Contribute from "@/pages/Contribute";
+import Profile from "@/pages/Profile";
 import NotFound from "@/pages/NotFound";
 
 const pageVariants = {
@@ -43,6 +44,7 @@ export default function AnimatedRoutes() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/contribute" element={<Contribute />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>

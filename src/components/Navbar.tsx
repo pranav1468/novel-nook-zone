@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Search, BookOpen, Menu, X } from "lucide-react";
+import { Moon, Sun, Search, BookOpen, Menu, X, User } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import ScrollProgress from "@/components/ScrollProgress";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -18,7 +19,16 @@ const navLinks = [
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <>
@@ -86,11 +96,20 @@ export default function Navbar() {
               </Button>
             </motion.div>
 
-            <Link to="/auth" className="hidden md:block">
-              <Button size="sm" className="active:scale-[0.97] transition-transform">
-                Sign In
-              </Button>
-            </Link>
+            {user ? (
+              <Link to="/profile" className="hidden md:block">
+                <Button size="sm" variant="outline" className="gap-1.5 active:scale-[0.97] transition-transform">
+                  <User className="h-4 w-4" />
+                  Profile
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth" className="hidden md:block">
+                <Button size="sm" className="active:scale-[0.97] transition-transform">
+                  Sign In
+                </Button>
+              </Link>
+            )}
 
             <Button
               variant="ghost"
@@ -126,11 +145,20 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link to="/auth" onClick={() => setMobileOpen(false)}>
-              <Button size="sm" className="mt-2 w-full active:scale-[0.97]">
-                Sign In
-              </Button>
-            </Link>
+            {user ? (
+              <Link to="/profile" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" variant="outline" className="mt-2 w-full gap-1.5 active:scale-[0.97]">
+                  <User className="h-4 w-4" />
+                  Profile
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" className="mt-2 w-full active:scale-[0.97]">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
