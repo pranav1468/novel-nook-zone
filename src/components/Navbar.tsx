@@ -96,11 +96,20 @@ export default function Navbar() {
               </Button>
             </motion.div>
 
-            <Link to="/auth" className="hidden md:block">
-              <Button size="sm" className="active:scale-[0.97] transition-transform">
-                Sign In
-              </Button>
-            </Link>
+            {user ? (
+              <Link to="/profile" className="hidden md:block">
+                <Button size="sm" variant="outline" className="gap-1.5 active:scale-[0.97] transition-transform">
+                  <User className="h-4 w-4" />
+                  Profile
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth" className="hidden md:block">
+                <Button size="sm" className="active:scale-[0.97] transition-transform">
+                  Sign In
+                </Button>
+              </Link>
+            )}
 
             <Button
               variant="ghost"
