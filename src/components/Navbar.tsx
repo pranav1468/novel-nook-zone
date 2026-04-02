@@ -145,11 +145,20 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link to="/auth" onClick={() => setMobileOpen(false)}>
-              <Button size="sm" className="mt-2 w-full active:scale-[0.97]">
-                Sign In
-              </Button>
-            </Link>
+            {user ? (
+              <Link to="/profile" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" variant="outline" className="mt-2 w-full gap-1.5 active:scale-[0.97]">
+                  <User className="h-4 w-4" />
+                  Profile
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" className="mt-2 w-full active:scale-[0.97]">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
