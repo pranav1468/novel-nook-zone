@@ -9,6 +9,8 @@ import { useState } from "react";
 import NovelVoting from "@/components/community/NovelVoting";
 import ReviewSection from "@/components/community/ReviewSection";
 import CommentSection from "@/components/community/CommentSection";
+import SocialShare from "@/components/engagement/SocialShare";
+import AddToListButton from "@/components/engagement/AddToListButton";
 
 function formatViews(n: number): string {
   if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
