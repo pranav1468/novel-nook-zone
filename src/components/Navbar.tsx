@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Search, BookOpen, Menu, X } from "lucide-react";
+import { Moon, Sun, Search, BookOpen, Menu, X, User } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import ScrollProgress from "@/components/ScrollProgress";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { to: "/", label: "Home" },
