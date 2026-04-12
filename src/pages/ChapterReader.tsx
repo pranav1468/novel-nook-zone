@@ -14,8 +14,6 @@ import {
   Plus,
   X,
   Palette,
-  Eye,
-  EyeOff,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
@@ -23,11 +21,11 @@ import AutoScrollTTS from "@/components/reader/AutoScrollTTS";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 const READER_THEMES = [
-  { label: "Light", bg: "#ffffff", text: "#1a1a2e", card: "#f8f8f8", border: "#e2e2e2", accent: "#e8740c", muted: "#6b7280", ambientHue: 30 },
-  { label: "Dark", bg: "#0a0c14", text: "#d4d4dc", card: "#12141f", border: "#1e2030", accent: "#e8740c", muted: "#8b8fa0", ambientHue: 225 },
-  { label: "Sepia", bg: "#f4ecd8", text: "#5b4636", card: "#ede4cf", border: "#d4c9ad", accent: "#8b6914", muted: "#8a7b6b", ambientHue: 35 },
-  { label: "Forest", bg: "#0d1a12", text: "#c8d6c0", card: "#142018", border: "#1e3020", accent: "#6abf4b", muted: "#7a9470", ambientHue: 140 },
-  { label: "Ocean", bg: "#080e1a", text: "#b8cfe0", card: "#0e1825", border: "#142535", accent: "#3ba5d9", muted: "#6a8fa8", ambientHue: 210 },
+  { label: "Light", bg: "#ffffff", text: "#1a1a2e", card: "#f8f8f8", border: "#e2e2e2", accent: "#e8740c", muted: "#6b7280" },
+  { label: "Dark", bg: "#141620", text: "#d4d4dc", card: "#1c1e2e", border: "#2a2d3e", accent: "#e8740c", muted: "#8b8fa0" },
+  { label: "Sepia", bg: "#f4ecd8", text: "#5b4636", card: "#ede4cf", border: "#d4c9ad", accent: "#8b6914", muted: "#8a7b6b" },
+  { label: "Forest", bg: "#1a2318", text: "#c8d6c0", card: "#222e1f", border: "#2e3d28", accent: "#6abf4b", muted: "#7a9470" },
+  { label: "Ocean", bg: "#0f1926", text: "#b8cfe0", card: "#162030", border: "#1e3045", accent: "#3ba5d9", muted: "#6a8fa8" },
 ] as const;
 
 type Chapter = {
@@ -74,7 +72,7 @@ function useNovelMeta(novelId: string) {
 
 const FONTS = [
   { label: "Serif", value: "Georgia, 'Times New Roman', serif", preview: "Aa" },
-  { label: "Sans", value: "'Inter', system-ui, sans-serif", preview: "Aa" },
+  { label: "Sans", value: "system-ui, -apple-system, sans-serif", preview: "Aa" },
   { label: "Mono", value: "'Courier New', monospace", preview: "Aa" },
   { label: "Dyslexic", value: "'Comic Sans MS', 'OpenDyslexic', cursive", preview: "Aa" },
   { label: "Literary", value: "'Palatino Linotype', 'Book Antiqua', Palatino, serif", preview: "Aa" },
@@ -101,11 +99,10 @@ export default function ChapterReader() {
   const saved = loadSettings();
   const [fontSize, setFontSize] = useState(saved?.fontSize ?? 18);
   const [fontIdx, setFontIdx] = useState(saved?.fontIdx ?? 0);
-  const [lineHeight, setLineHeight] = useState(saved?.lineHeight ?? 1.9);
+  const [lineHeight, setLineHeight] = useState(saved?.lineHeight ?? 1.8);
   const [maxWidth, setMaxWidth] = useState(saved?.maxWidth ?? 672);
   const [showSettings, setShowSettings] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [focusMode, setFocusMode] = useState(false);
   const [readerThemeIdx, setReaderThemeIdx] = useState(() => {
     const saved = localStorage.getItem("novelhub-reader-theme");
     return saved ? parseInt(saved, 10) : 1;
@@ -113,8 +110,10 @@ export default function ChapterReader() {
 
   const rt = READER_THEMES[readerThemeIdx];
 
+  // Reading progress sync
   const { savedProgress, isLoggedIn } = useReadingProgress(id || "", chapterNum, scrollProgress);
 
+  // Persist all settings
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ fontSize, fontIdx, lineHeight, maxWidth }));
   }, [fontSize, fontIdx, lineHeight, maxWidth]);
@@ -132,17 +131,17 @@ export default function ChapterReader() {
     [id, navigate]
   );
 
+  // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" && hasPrev) goTo(chapterNum - 1);
       if (e.key === "ArrowRight" && hasNext) goTo(chapterNum + 1);
-      if (e.key === "Escape" && focusMode) setFocusMode(false);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [hasPrev, hasNext, chapterNum, goTo, focusMode]);
+  }, [hasPrev, hasNext, chapterNum, goTo]);
 
-  // Preload
+  // Preload adjacent chapters
   const queryClient = useQueryClient();
   useEffect(() => {
     const preload = (num: number) => {
@@ -166,7 +165,6 @@ export default function ChapterReader() {
     preload(chapterNum + 2);
     if (chapterNum > 1) preload(chapterNum - 1);
   }, [id, chapterNum, totalChapters, queryClient]);
-
   useEffect(() => {
     const onScroll = () => {
       const scrolled = window.scrollY;
@@ -177,13 +175,14 @@ export default function ChapterReader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Scroll to top on chapter change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [chapterNum]);
 
   if (isLoading) {
     return (
-      <main className="min-h-screen py-16" style={{ backgroundColor: rt.bg }}>
+      <main className="min-h-screen py-16">
         <div className="mx-auto max-w-2xl px-6 space-y-6">
           <Skeleton className="h-6 w-48" />
           <Skeleton className="h-10 w-3/4" />
@@ -201,9 +200,13 @@ export default function ChapterReader() {
     return (
       <main className="flex min-h-screen items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-lg font-medium text-foreground">Chapter not found</p>
+          <p className="text-lg font-medium text-foreground">
+            Chapter not found
+          </p>
           <Link to={`/novel/${id}`}>
-            <Button variant="outline" size="sm">Back to Novel</Button>
+            <Button variant="outline" size="sm">
+              Back to Novel
+            </Button>
           </Link>
         </div>
       </main>
@@ -212,75 +215,44 @@ export default function ChapterReader() {
 
   return (
     <>
-      {/* Progress bar */}
+      {/* Reading progress bar */}
       <div
         className="fixed top-0 left-0 h-[3px] z-[70] origin-left"
         style={{ transform: `scaleX(${scrollProgress / 100})`, backgroundColor: rt.accent }}
       />
 
-      {/* Ambient background glow that subtly shifts */}
-      <div
-        className="fixed inset-0 pointer-events-none transition-opacity duration-1000 z-0"
-        style={{
-          opacity: focusMode ? 0 : 0.4,
-          background: `radial-gradient(ellipse 80% 40% at 50% 0%, hsl(${rt.ambientHue} 30% 15% / 0.15) 0%, transparent 70%)`,
-        }}
-      />
-
       <main
-        className="relative min-h-screen transition-colors duration-700 z-10"
+        className="min-h-screen py-12 md:py-16 transition-colors duration-500"
         style={{ backgroundColor: rt.bg, color: rt.text }}
       >
-        {/* Top bar - fades in focus mode */}
-        <motion.div
-          className="sticky top-0 z-50 transition-all duration-500"
-          style={{
-            backgroundColor: `${rt.bg}ee`,
-            backdropFilter: "blur(12px)",
-            borderBottom: `1px solid ${rt.border}`,
-            opacity: focusMode ? 0 : 1,
-            pointerEvents: focusMode ? "none" : "auto",
-          }}
-        >
-          <div className="mx-auto flex items-center justify-between px-6 py-3" style={{ maxWidth: `${maxWidth + 100}px` }}>
+        <div className="mx-auto px-6 transition-all duration-300" style={{ maxWidth: `${maxWidth}px` }}>
+          {/* Top nav */}
+          <motion.div
+            className="flex items-center justify-between mb-8"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <Link
               to={`/novel/${id}`}
               className="inline-flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
               style={{ color: rt.muted }}
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">{novelMeta?.title || "Back"}</span>
+              {novelMeta?.title || "Back"}
             </Link>
 
-            <span className="text-xs font-medium" style={{ color: rt.muted }}>
-              Chapter {chapterNum} of {totalChapters}
-            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowSettings(!showSettings)}
+              className="relative"
+              style={{ color: rt.text }}
+            >
+              <Settings2 className="h-4 w-4" />
+            </Button>
+          </motion.div>
 
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                style={{ color: rt.text }}
-                onClick={() => setFocusMode(!focusMode)}
-                title={focusMode ? "Exit focus mode" : "Focus mode"}
-              >
-                {focusMode ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setShowSettings(!showSettings)}
-                style={{ color: rt.text }}
-              >
-                <Settings2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="mx-auto px-6 pt-8 pb-16 transition-all duration-300" style={{ maxWidth: `${maxWidth}px` }}>
           {/* Settings panel */}
           <AnimatePresence>
             {showSettings && (
@@ -291,11 +263,11 @@ export default function ChapterReader() {
                 className="overflow-hidden mb-8"
               >
                 <div
-                  className="rounded-2xl p-6 space-y-5 transition-colors duration-300"
-                  style={{ backgroundColor: rt.card, border: `1px solid ${rt.border}` }}
+                  className="rounded-xl p-5 space-y-5 transition-colors duration-300"
+                  style={{ backgroundColor: rt.card, borderColor: rt.border, border: `1px solid ${rt.border}` }}
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold" style={{ color: rt.text, fontFamily: "system-ui" }}>
+                    <h3 className="text-sm font-semibold" style={{ color: rt.text }}>
                       Reading Settings
                     </h3>
                     <Button
@@ -309,9 +281,9 @@ export default function ChapterReader() {
                     </Button>
                   </div>
 
-                  {/* Theme */}
+                  {/* Reader Theme */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted, fontFamily: "system-ui" }}>
+                    <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted }}>
                       <Palette className="h-3.5 w-3.5" /> Theme
                     </label>
                     <div className="flex gap-2">
@@ -319,19 +291,22 @@ export default function ChapterReader() {
                         <button
                           key={theme.label}
                           onClick={() => setReaderThemeIdx(i)}
-                          className="flex flex-col items-center gap-1.5 flex-1 rounded-xl p-2.5 transition-all"
+                          className="flex flex-col items-center gap-1 flex-1 rounded-lg p-2 transition-all"
                           style={{
                             border: readerThemeIdx === i ? `2px solid ${rt.accent}` : `1px solid ${rt.border}`,
                             backgroundColor: theme.bg,
                           }}
                         >
-                          <div className="w-full h-6 rounded" style={{ backgroundColor: theme.bg, border: `1px solid ${theme.border}` }}>
+                          <div
+                            className="w-full h-6 rounded"
+                            style={{ backgroundColor: theme.bg, border: `1px solid ${theme.border}` }}
+                          >
                             <div className="flex flex-col gap-0.5 p-1">
                               <div className="h-[2px] w-3/4 rounded" style={{ backgroundColor: theme.text }} />
                               <div className="h-[2px] w-1/2 rounded" style={{ backgroundColor: theme.muted }} />
                             </div>
                           </div>
-                          <span className="text-[10px] font-medium" style={{ color: theme.text, fontFamily: "system-ui" }}>
+                          <span className="text-[10px] font-medium" style={{ color: theme.text }}>
                             {theme.label}
                           </span>
                         </button>
@@ -341,14 +316,14 @@ export default function ChapterReader() {
 
                   {/* Font family */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted, fontFamily: "system-ui" }}>
-                      <Type className="h-3.5 w-3.5" /> Font
+                    <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: rt.muted }}>
+                      <Type className="h-3.5 w-3.5" /> Font Family
                     </label>
                     <div className="flex gap-2 flex-wrap">
                       {FONTS.map((f, i) => (
                         <button
                           key={f.label}
-                          className="flex flex-col items-center gap-0.5 rounded-xl py-2 px-3 transition-all min-w-[60px]"
+                          className="flex flex-col items-center gap-0.5 rounded-lg py-2 px-3 transition-all min-w-[60px]"
                           style={{
                             backgroundColor: fontIdx === i ? rt.accent : "transparent",
                             color: fontIdx === i ? "#fff" : rt.text,
@@ -366,15 +341,34 @@ export default function ChapterReader() {
 
                   {/* Font size */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium" style={{ color: rt.muted, fontFamily: "system-ui" }}>
-                      Size: {fontSize}px
+                    <label className="text-xs font-medium" style={{ color: rt.muted }}>
+                      Font Size: {fontSize}px
                     </label>
                     <div className="flex items-center gap-3">
-                      <Button variant="outline" size="icon" className="h-8 w-8" style={{ borderColor: rt.border, color: rt.text }} onClick={() => setFontSize((s) => Math.max(12, s - 1))}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8"
+                        style={{ borderColor: rt.border, color: rt.text }}
+                        onClick={() => setFontSize((s) => Math.max(12, s - 1))}
+                      >
                         <Minus className="h-3.5 w-3.5" />
                       </Button>
-                      <Slider value={[fontSize]} min={12} max={28} step={1} onValueChange={([v]) => setFontSize(v)} className="flex-1" />
-                      <Button variant="outline" size="icon" className="h-8 w-8" style={{ borderColor: rt.border, color: rt.text }} onClick={() => setFontSize((s) => Math.min(28, s + 1))}>
+                      <Slider
+                        value={[fontSize]}
+                        min={12}
+                        max={28}
+                        step={1}
+                        onValueChange={([v]) => setFontSize(v)}
+                        className="flex-1"
+                      />
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8"
+                        style={{ borderColor: rt.border, color: rt.text }}
+                        onClick={() => setFontSize((s) => Math.min(28, s + 1))}
+                      >
                         <Plus className="h-3.5 w-3.5" />
                       </Button>
                     </div>
@@ -382,24 +376,37 @@ export default function ChapterReader() {
 
                   {/* Line height */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium" style={{ color: rt.muted, fontFamily: "system-ui" }}>
+                    <label className="text-xs font-medium" style={{ color: rt.muted }}>
                       Line Spacing: {lineHeight.toFixed(1)}
                     </label>
-                    <Slider value={[lineHeight]} min={1.2} max={2.8} step={0.1} onValueChange={([v]) => setLineHeight(v)} />
+                    <Slider
+                      value={[lineHeight]}
+                      min={1.2}
+                      max={2.8}
+                      step={0.1}
+                      onValueChange={([v]) => setLineHeight(v)}
+                    />
                   </div>
 
-                  {/* Width */}
+                  {/* Content width */}
                   <div className="space-y-2">
-                    <label className="text-xs font-medium" style={{ color: rt.muted, fontFamily: "system-ui" }}>
-                      Width: {maxWidth}px
+                    <label className="text-xs font-medium" style={{ color: rt.muted }}>
+                      Content Width: {maxWidth}px
                     </label>
-                    <Slider value={[maxWidth]} min={480} max={900} step={10} onValueChange={([v]) => setMaxWidth(v)} />
+                    <Slider
+                      value={[maxWidth]}
+                      min={480}
+                      max={900}
+                      step={10}
+                      onValueChange={([v]) => setMaxWidth(v)}
+                    />
                   </div>
 
+                  {/* Reset button */}
                   <button
                     className="text-xs font-medium underline underline-offset-2 opacity-60 hover:opacity-100 transition-opacity"
-                    style={{ color: rt.muted, fontFamily: "system-ui" }}
-                    onClick={() => { setFontSize(18); setFontIdx(0); setLineHeight(1.9); setMaxWidth(672); setReaderThemeIdx(1); }}
+                    style={{ color: rt.muted }}
+                    onClick={() => { setFontSize(18); setFontIdx(0); setLineHeight(1.8); setMaxWidth(672); setReaderThemeIdx(1); }}
                   >
                     Reset to defaults
                   </button>
@@ -410,40 +417,35 @@ export default function ChapterReader() {
 
           {/* Chapter header */}
           <motion.div
-            className="mb-12"
+            className="mb-10"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-xs font-medium uppercase tracking-[0.2em] mb-3" style={{ color: rt.accent }}>
+            <p className="text-xs font-medium uppercase tracking-widest mb-2" style={{ color: rt.accent }}>
               Chapter {chapterData.chapter_number}
             </p>
             <h1
-              className="text-3xl md:text-4xl font-bold leading-[1.1]"
-              style={{ color: rt.text, fontFamily: "'Playfair Display', serif", textWrap: "balance" } as React.CSSProperties}
+              className="text-2xl md:text-3xl font-bold"
+              style={{ color: rt.text, textWrap: "balance" } as React.CSSProperties}
             >
               {chapterData.title}
             </h1>
-            {/* Decorative divider */}
-            <div className="mt-6 flex items-center gap-3">
-              <div className="h-px flex-1" style={{ background: `linear-gradient(to right, ${rt.accent}40, transparent)` }} />
-              <div className="h-1.5 w-1.5 rounded-full" style={{ background: rt.accent }} />
-              <div className="h-px flex-1" style={{ background: `linear-gradient(to left, ${rt.accent}40, transparent)` }} />
-            </div>
           </motion.div>
 
-          {/* Auto-scroll & TTS */}
+          {/* Auto-scroll & TTS toolbar */}
           <div className="mb-6">
             <AutoScrollTTS rt={rt} content={chapterData.content} />
           </div>
 
+          {/* Reading progress sync indicator */}
           {isLoggedIn && (
-            <p className="text-[10px] mb-6" style={{ color: rt.muted, fontFamily: "system-ui" }}>
-              ✓ Progress synced
+            <p className="text-[10px] mb-4" style={{ color: rt.muted }}>
+              ✓ Progress synced to your account
             </p>
           )}
 
-          {/* Content */}
+          {/* Chapter content */}
           <motion.article
             className="max-w-none"
             style={{
@@ -454,11 +456,11 @@ export default function ChapterReader() {
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
           >
             {chapterData.content ? (
               chapterData.content.split("\n\n").map((para, i) => (
-                <p key={i} className="mb-7" style={{ opacity: 0.88 }}>
+                <p key={i} className="mb-6" style={{ opacity: 0.85 }}>
                   {para}
                 </p>
               ))
@@ -471,14 +473,14 @@ export default function ChapterReader() {
 
           {/* Bottom navigation */}
           <motion.div
-            className="mt-20 flex items-center justify-between pt-8"
+            className="mt-16 flex items-center justify-between pt-6"
             style={{ borderTop: `1px solid ${rt.border}` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
             <button
-              className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all duration-300 disabled:opacity-30 hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
               style={{ border: `1px solid ${rt.border}`, color: rt.text }}
               disabled={!hasPrev}
               onClick={() => hasPrev && goTo(chapterNum - 1)}
@@ -487,23 +489,12 @@ export default function ChapterReader() {
               Previous
             </button>
 
-            <div className="text-center">
-              <span className="text-xs block" style={{ color: rt.muted, fontFamily: "system-ui" }}>
-                {chapterNum} / {totalChapters}
-              </span>
-              <div className="mt-2 h-1 w-24 rounded-full overflow-hidden" style={{ background: `${rt.border}` }}>
-                <div
-                  className="h-full rounded-full transition-all duration-300"
-                  style={{
-                    width: `${totalChapters ? (chapterNum / totalChapters) * 100 : 0}%`,
-                    background: rt.accent,
-                  }}
-                />
-              </div>
-            </div>
+            <span className="text-xs" style={{ color: rt.muted }}>
+              {chapterNum} / {totalChapters}
+            </span>
 
             <button
-              className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all duration-300 disabled:opacity-30 hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
               style={{ backgroundColor: rt.accent, color: "#fff" }}
               disabled={!hasNext}
               onClick={() => hasNext && goTo(chapterNum + 1)}
