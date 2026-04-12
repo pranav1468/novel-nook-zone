@@ -1,28 +1,26 @@
-import HeroSection from "@/components/home/HeroSection";
-import RecentlyAdded from "@/components/home/RecentlyAdded";
-import TrendingNovels from "@/components/home/TrendingNovels";
-import FeaturedNovels from "@/components/home/FeaturedNovels";
-import GenreCategories from "@/components/home/GenreCategories";
-import RankingsSidebar from "@/components/home/RankingsSidebar";
-import RecentUpdates from "@/components/home/RecentUpdates";
-import StatsCounter from "@/components/home/StatsCounter";
-import NovelMarquee from "@/components/home/NovelMarquee";
+import ImmersiveHero from "@/components/home/ImmersiveHero";
+import StoryWorlds from "@/components/home/StoryWorlds";
+import GenreExperience from "@/components/home/GenreExperience";
+import FeaturedShowcase from "@/components/home/FeaturedShowcase";
+import TrendingImmersive from "@/components/home/TrendingImmersive";
+import MoodDiscovery from "@/components/home/MoodDiscovery";
 import ContinueReading from "@/components/home/ContinueReading";
 import AIRecommendations from "@/components/engagement/AIRecommendations";
+import StatsCounter from "@/components/home/StatsCounter";
+import RecentUpdates from "@/components/home/RecentUpdates";
 
 export default function Index() {
   return (
     <main>
-      <HeroSection />
-      <NovelMarquee />
+      <ImmersiveHero />
       <ContinueReading />
-      <StatsCounter />
-      <RecentlyAdded />
+      <StoryWorlds />
+      <MoodDiscovery />
+      <GenreExperience />
+      <FeaturedShowcase />
       <AIRecommendations />
-      <GenreCategories />
-      <TrendingNovels />
-      <FeaturedNovels />
-      <RankingsSidebar />
+      <TrendingImmersive />
+      <StatsCounter />
       <RecentUpdates />
     </main>
   );
