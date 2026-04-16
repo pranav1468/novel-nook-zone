@@ -210,8 +210,8 @@ function LiveIndicator() {
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
       <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/60 opacity-75" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
       </span>
       <span className="text-xs font-medium text-muted-foreground">
         <Zap className="inline h-3 w-3 text-primary mr-1" />
