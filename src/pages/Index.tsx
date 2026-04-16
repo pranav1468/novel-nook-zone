@@ -9,6 +9,7 @@ import StatsCounter from "@/components/home/StatsCounter";
 import NovelMarquee from "@/components/home/NovelMarquee";
 import ContinueReading from "@/components/home/ContinueReading";
 import AIRecommendations from "@/components/engagement/AIRecommendations";
+import SystemFlow from "@/components/home/SystemFlow";
 
 export default function Index() {
   return (
@@ -17,6 +18,7 @@ export default function Index() {
       <NovelMarquee />
       <ContinueReading />
       <StatsCounter />
+      <SystemFlow />
       <RecentlyAdded />
       <AIRecommendations />
       <GenreCategories />
