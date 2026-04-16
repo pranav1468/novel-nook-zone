@@ -15,6 +15,7 @@ function AnimatedNumber({ target, duration = 2 }: { target: number; duration?: n
     const tick = () => {
       const elapsed = Date.now() - start;
       const progress = Math.min(elapsed / (duration * 1000), 1);
+      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCurrent(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(tick);
@@ -42,46 +43,38 @@ export default function StatsCounter() {
   });
 
   const items = [
-    { icon: BookOpen, label: "Novels", value: stats?.novels ?? 0, suffix: "+" },
-    { icon: Layers, label: "Chapters", value: stats?.chapters ?? 0, suffix: "" },
-    { icon: Eye, label: "Total Views", value: stats?.views ?? 0, suffix: "" },
-    { icon: Users, label: "Readers", value: Math.floor((stats?.views ?? 0) / 3), suffix: "+" },
+    { icon: BookOpen, label: "Novels", value: stats?.novels ?? 0 },
+    { icon: Layers, label: "Chapters", value: stats?.chapters ?? 0 },
+    { icon: Eye, label: "Total Views", value: stats?.views ?? 0 },
+    { icon: Users, label: "Readers", value: Math.floor((stats?.views ?? 0) / 3) },
   ];
 
   return (
-    <section className="py-12 relative">
+    <section className="py-6">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="flex flex-wrap justify-between gap-6 md:gap-8"
         >
-          {items.map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm p-6 text-center transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
-              >
-                <div className="flex justify-center mb-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 group-hover:scale-110 transition-transform">
-                    <Icon className="h-5 w-5 text-primary" />
-                  </div>
-                </div>
-                <span className="text-3xl font-bold text-foreground md:text-4xl">
-                  <AnimatedNumber target={item.value} />
-                  {item.suffix}
-                </span>
-                <p className="mt-1 text-sm font-medium text-muted-foreground">{item.label}</p>
-              </motion.div>
-            );
-          })}
+          {items.map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="flex flex-col items-start gap-0.5"
+            >
+              <span className="text-2xl font-bold text-primary md:text-3xl lg:text-4xl">
+                <AnimatedNumber target={item.value} />
+                {item.label === "Readers" || item.label === "Novels" ? "+" : ""}
+              </span>
+              <span className="text-sm font-medium text-muted-foreground">{item.label}</span>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>
