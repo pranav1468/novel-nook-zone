@@ -18,7 +18,7 @@ export default function FeaturedNovels() {
   const sidePicks = novels?.slice(1, 4) ?? [];
 
   return (
-    <section className="py-24">
+    <section className="relative py-24 glass-ambient">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -109,7 +109,7 @@ export default function FeaturedNovels() {
                   >
                     <Link
                       to={`/novel/${novel.id}`}
-                      className="group flex gap-4 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm p-4 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_8px_30px_-10px_hsl(var(--primary)/0.25)] hover:-translate-y-0.5"
+                      className="group flex gap-4 rounded-2xl glass glass-hover p-4 hover:-translate-y-0.5"
                     >
                       <div
                         className="h-[92px] w-[78px] shrink-0 overflow-hidden rounded-lg"
