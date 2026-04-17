@@ -59,7 +59,7 @@ export default function NovelCard({ novel, index = 0, size = "default" }: NovelC
         {/* 3D Tilt container */}
         <div
           ref={cardRef}
-          className="tilt-card rounded-lg transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10"
+          className="tilt-card rounded-lg glass glass-hover overflow-hidden"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{
@@ -95,7 +95,7 @@ export default function NovelCard({ novel, index = 0, size = "default" }: NovelC
             <div className="absolute right-2 top-2">
               <Badge
                 variant="secondary"
-                className="text-[10px] capitalize bg-background/80 text-foreground backdrop-blur-sm border-0"
+                className="text-[10px] capitalize glass-strong text-foreground border-0"
               >
                 {novel.status}
               </Badge>

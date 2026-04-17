@@ -82,7 +82,7 @@ export default function Browse() {
   const hasFilters = search || selectedGenre || sortBy !== "latest" || statusFilter !== "all";
 
   return (
-    <main className="min-h-screen py-10">
+    <main className="relative min-h-screen py-10 glass-ambient">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -97,19 +97,19 @@ export default function Browse() {
 
         {/* Search & Filters */}
         <motion.div
-          className="mt-8 space-y-4"
+          className="mt-8 space-y-4 glass rounded-2xl p-5"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* Search */}
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
             <Input
               placeholder="Search by title or author..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
+              className="pl-9 glass border-0"
             />
           </div>
 
@@ -127,10 +127,10 @@ export default function Browse() {
                   }
                   setSearchParams(searchParams);
                 }}
-                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors active:scale-[0.97] ${
+                className={`rounded-full border px-3 py-1 text-xs font-medium transition-all active:scale-[0.97] ${
                   selectedGenre === genre
                     ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    : "glass glass-hover border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {genre}
