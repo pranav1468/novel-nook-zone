@@ -16,7 +16,7 @@ const genres: { name: string; tagline: string; icon: LucideIcon; hue: number }[]
 
 export default function GenreCategories() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-24 overflow-hidden glass-ambient">
       {/* Subtle background grid */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -57,7 +57,7 @@ export default function GenreCategories() {
               >
                 <Link
                   to={`/browse?genre=${genre.name}`}
-                  className="group relative flex items-center gap-4 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_8px_30px_-10px_hsl(var(--primary)/0.25)] hover:-translate-y-0.5 active:scale-[0.98] overflow-hidden"
+                  className="group relative flex items-center gap-4 rounded-2xl glass glass-hover p-5 hover:-translate-y-0.5 active:scale-[0.98] overflow-hidden"
                 >
                   {/* Hover background tint */}
                   <div

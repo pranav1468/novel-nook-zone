@@ -47,7 +47,7 @@ const steps: Step[] = [
 
 export default function HowItWorks() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-24 overflow-hidden glass-ambient">
       {/* Subtle background grid */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -94,11 +94,11 @@ export default function HowItWorks() {
                 className="relative"
               >
                 {/* Step number floating badge */}
-                <div className="absolute -top-3 left-6 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-background text-xs font-bold text-primary">
+                <div className="absolute -top-3 left-6 z-10 flex h-7 w-7 items-center justify-center rounded-full glass text-xs font-bold text-primary">
                   {step.num}
                 </div>
 
-                <div className="group relative h-full rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm p-6 pt-8 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_8px_30px_-10px_hsl(var(--primary)/0.25)] hover:-translate-y-1">
+                <div className="group relative h-full rounded-2xl glass glass-hover p-6 pt-8 hover:-translate-y-1">
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
                     style={{ backgroundColor: `hsl(${step.hue} 70% 88% / 0.5)` }}
