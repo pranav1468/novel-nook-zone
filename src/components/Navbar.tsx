@@ -33,7 +33,7 @@ export default function Navbar() {
   return (
     <>
       <ScrollProgress />
-      <nav className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 glass-nav">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
