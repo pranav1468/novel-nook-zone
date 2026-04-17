@@ -69,7 +69,7 @@ export default function NovelDetail() {
     : chapters?.slice(0, 20);
 
   return (
-    <main className="relative min-h-screen py-10 glass-ambient">
+    <main className="min-h-screen py-10">
       <div className="mx-auto max-w-4xl px-6">
         {/* Back */}
         <motion.div
@@ -95,11 +95,11 @@ export default function NovelDetail() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <div
-              className="aspect-[2/3] w-48 rounded-xl md:w-56 glass overflow-hidden"
+              className="aspect-[2/3] w-48 rounded-xl md:w-56"
               style={{ background: coverGradient(novel.title) }}
             >
               {novel.cover_url ? (
-                <img src={novel.cover_url} alt={novel.title} className="h-full w-full object-cover" />
+                <img src={novel.cover_url} alt={novel.title} className="h-full w-full rounded-xl object-cover" />
               ) : (
                 <div className="flex h-full items-end p-4">
                   <p className="text-sm font-bold text-white/80" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
@@ -204,7 +204,7 @@ export default function NovelDetail() {
                 <Link
                   key={ch.id}
                   to={`/novel/${novel.id}/chapter/${ch.chapter_number}`}
-                  className="flex items-center justify-between rounded-lg glass glass-hover px-4 py-3 text-sm"
+                  className="flex items-center justify-between rounded-lg border border-border/40 bg-card px-4 py-3 text-sm hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-medium text-muted-foreground w-8">
@@ -237,7 +237,7 @@ export default function NovelDetail() {
               )}
             </div>
           ) : (
-            <div className="rounded-lg glass px-6 py-12 text-center">
+            <div className="rounded-lg border border-border/40 bg-card px-6 py-12 text-center">
               <p className="text-muted-foreground">No chapters available yet</p>
               <p className="mt-1 text-xs text-muted-foreground/60">Check back soon for updates</p>
             </div>
